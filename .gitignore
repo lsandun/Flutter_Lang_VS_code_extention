@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+
+# Production
+out/
+dist/
+
+# VS Code specific
+.vscode-test/
+*.vsix
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Logs
+npm-debug.log
+yarn-error.log
+
+# Antigravity / IDE specific (Optional safety)
+.history/

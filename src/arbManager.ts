@@ -63,13 +63,13 @@ export async function updateArbFile(strings: ExtractedString[], locale: string =
 
     // Update with new strings
     for (const strObj of strings) {
-        const key = generateKey(strObj.text);
+        const key = generateKey(strObj.cleanText);
 
         // Prevent overwriting existing keys implies we check if key exists
         // But what if different text maps to same key? 
         // For this step, if key exists, we skip (simple collision handling). 
         if (!arbContent[key]) {
-            arbContent[key] = strObj.text;
+            arbContent[key] = strObj.cleanText;
             joinedCount++;
         }
     }

@@ -45,14 +45,42 @@ export function activate(context: vscode.ExtensionContext) {
 
                 // SECOND: Loop through the extracted strings (in reverse order) and perform the replacements.
                 for (const strObj of stringsToReplace) {
-                    const startPos = document.positionAt(strObj.index);
-                    const endPos = document.positionAt(strObj.index + strObj.text.length);
+                    let startPos = document.positionAt(strObj.index);
+                    let endPos = document.positionAt(strObj.index + strObj.fullMatch.length);
+
+                    const key = generateKey(strObj.cleanText);
+                    let replacement = `AppLocalizations.of(context)!.${key}`;
+
+                    // CHECK FOR PRECEDING 'const Text('
+                    // Get up to 50 chars before the string
+                    const lookbehindLength = 50;
+                    const startOffset = Math.max(0, strObj.index - lookbehindLength);
+                    const rangeBefore = new vscode.Range(
+                        document.positionAt(startOffset),
+                        document.positionAt(strObj.index)
+                    );
+                    const textBefore = document.getText(rangeBefore);
+
+                    // Regex to find 'const Text(' or 'const  Text (' at the End of the string
+                    // Capturing 'const' separate from 'Text(' helps
+                    const constMatch = textBefore.match(/(const)\s+(Text\s*\()$/);
+
+                    if (constMatch) {
+                        // constMatch[0]: "const Text("
+                        // constMatch[1]: "const"
+                        // constMatch[2]: "Text("
+                        // match.index is relative to textBefore.
+
+                        if (constMatch.index !== undefined) {
+                            const absStartIndex = startOffset + constMatch.index;
+                            startPos = document.positionAt(absStartIndex);
+
+                            // Replacement: "Text(" + "AppLocalizations..."
+                            replacement = `${constMatch[2]}${replacement}`;
+                        }
+                    }
+
                     const range = new vscode.Range(startPos, endPos);
-
-                    const key = generateKey(strObj.text);
-                    // Use standard Flutter Gen l10n syntax
-                    const replacement = `AppLocalizations.of(context)!.${key}`;
-
                     editBuilder.replace(range, replacement);
                 }
             });

@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { extractStrings } from './stringExtractor';
 import { updateArbFile, generateKey } from './arbManager';
 import { translateStrings } from './translator';
+import { SUPPORTED_LANGUAGES } from './languages';
 
 export function activate(context: vscode.ExtensionContext) {
     console.log('Congratulations, your extension "flutter-auto-localizer" is now active!');
@@ -54,22 +55,7 @@ export function activate(context: vscode.ExtensionContext) {
                 }
             });
 
-            const languages = [
-                { label: 'Sinhala', description: 'si' },
-                { label: 'Tamil', description: 'ta' },
-                { label: 'French', description: 'fr' },
-                { label: 'Spanish', description: 'es' },
-                { label: 'German', description: 'de' },
-                { label: 'Japanese', description: 'ja' },
-                { label: 'Italian', description: 'it' },
-                { label: 'Portuguese', description: 'pt' },
-                { label: 'Russian', description: 'ru' },
-                { label: 'Chinese (Simplified)', description: 'zh-cn' },
-                { label: 'Arabic', description: 'ar' },
-                { label: 'Hindi', description: 'hi' }
-            ];
-
-            const selectedLanguages = await vscode.window.showQuickPick(languages, {
+            const selectedLanguages = await vscode.window.showQuickPick(SUPPORTED_LANGUAGES, {
                 canPickMany: true,
                 placeHolder: 'Select target languages for translation (optional)'
             });

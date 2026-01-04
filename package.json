@@ -3,6 +3,7 @@
   "displayName": "Flutter Auto Localizer",
   "description": "Automate extraction of hard-coded strings in Flutter projects.",
   "version": "0.0.1",
+  "publisher": "lakshan",
   "engines": {
     "vscode": "^1.80.0"
   },

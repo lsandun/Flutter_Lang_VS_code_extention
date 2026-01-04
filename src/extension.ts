@@ -1,4 +1,6 @@
 import * as vscode from 'vscode';
+import * as fs from 'fs';
+import * as path from 'path';
 import { extractStrings } from './stringExtractor';
 import { updateArbFile, generateKey } from './arbManager';
 import { translateStrings } from './translator';
@@ -55,7 +57,42 @@ export function activate(context: vscode.ExtensionContext) {
                 }
             });
 
-            const selectedLanguages = await vscode.window.showQuickPick(SUPPORTED_LANGUAGES, {
+            // Smart Pre-selection Logic
+            let quickPickItems = SUPPORTED_LANGUAGES.map(lang => ({ ...lang, picked: false })); // Clone
+
+            if (vscode.workspace.workspaceFolders) {
+                const rootPath = vscode.workspace.workspaceFolders[0].uri.fsPath;
+                const l10nDir = path.join(rootPath, 'lib', 'l10n');
+
+                if (fs.existsSync(l10nDir)) {
+                    const files = fs.readdirSync(l10nDir);
+                    const activeCodes = new Set<string>();
+
+                    files.forEach(file => {
+                        // Match app_{code}.arb, handling regional codes like zh-cn if needed (though filename usually zh_CN)
+                        // Our generator uses code directly from supported list which matches google translate codes
+                        const match = file.match(/^app_([a-zA-Z-]+)\.arb$/);
+                        if (match) {
+                            activeCodes.add(match[1]);
+                        }
+                    });
+
+                    // Update picked status and Sort
+                    quickPickItems = quickPickItems.map(lang => {
+                        if (activeCodes.has(lang.description)) {
+                            return { ...lang, picked: true };
+                        }
+                        return lang;
+                    }).sort((a, b) => {
+                        // Picked items come first
+                        if (a.picked && !b.picked) return -1;
+                        if (!a.picked && b.picked) return 1;
+                        return 0;
+                    });
+                }
+            }
+
+            const selectedLanguages = await vscode.window.showQuickPick(quickPickItems, {
                 canPickMany: true,
                 placeHolder: 'Select target languages for translation (optional)'
             });

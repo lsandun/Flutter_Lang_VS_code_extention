@@ -105,9 +105,15 @@ export function activate(context: vscode.ExtensionContext) {
 
         if (selectedLanguages && selectedLanguages.length > 0) {
             const targetLocales = selectedLanguages.map(l => l.description!);
-            vscode.window.showInformationMessage(`Starting background translation...`);
-            // Start translation in background
-            translateStrings(extractedStrings, targetLocales);
+
+            vscode.window.withProgress({
+                location: vscode.ProgressLocation.Notification,
+                title: "Flutter Auto Localizer",
+                cancellable: false
+            }, async (progress) => {
+                await translateStrings(extractedStrings, targetLocales, progress);
+            });
+
         } else {
             vscode.window.showInformationMessage(`Process completed! (No translation selected)`);
         }

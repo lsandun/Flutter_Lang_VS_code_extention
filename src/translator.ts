@@ -10,11 +10,11 @@ function delay(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export async function translateStrings(strings: ExtractedString[], targetLocales: string[]) {
+export async function translateStrings(strings: ExtractedString[], targetLocales: string[], progress?: vscode.Progress<{ message?: string; increment?: number }>) {
     // Note: We ignore the passed 'strings' argument and use app_en.arb as source of truth
     // to ensure we sync all missing keys, not just the newly extracted ones.
 
-    vscode.window.showInformationMessage(`Syncing translations for [${targetLocales.join(', ')}] in background...`);
+    // vscode.window.showInformationMessage(`Syncing translations for [${targetLocales.join(', ')}] in background...`); // Handled by progress notification now
 
     const TARGET_LANGUAGES = targetLocales.map(code => ({
         code: code,
@@ -44,6 +44,9 @@ export async function translateStrings(strings: ExtractedString[], targetLocales
     }
 
     for (const lang of TARGET_LANGUAGES) {
+        if (progress) {
+            progress.report({ message: `Translating to ${lang.code}...` });
+        }
         try {
             const targetPath = path.join(l10nDir, lang.filename);
             let targetContent: Record<string, string> = { "@@locale": lang.code };

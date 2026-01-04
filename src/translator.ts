@@ -80,6 +80,9 @@ export async function translateStrings(strings: ExtractedString[], targetLocales
 
             for (const key of keysToTranslate) {
                 const sourceText = sourceContent[key];
+                if (progress) {
+                    progress.report({ message: `Restoring ${lang.code}: ${key}...` });
+                }
                 try {
                     const res = await translate(sourceText, { to: lang.code });
                     targetContent[key] = res.text;

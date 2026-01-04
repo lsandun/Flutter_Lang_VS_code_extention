@@ -60,6 +60,17 @@ export function activate(context: vscode.ExtensionContext) {
             vscode.window.showInformationMessage(`Localized ${extractedStrings.length} strings successfully!`);
 
         } else {
+            // Check if app_en.arb exists BEFORE proceeding
+            if (vscode.workspace.workspaceFolders) {
+                const rootPath = vscode.workspace.workspaceFolders[0].uri.fsPath;
+                const appEnPath = path.join(rootPath, 'lib', 'l10n', 'app_en.arb');
+
+                if (!fs.existsSync(appEnPath)) {
+                    vscode.window.showErrorMessage("Critical Error: Source file 'app_en.arb' is missing! Please restore it to sync translations.");
+                    return;
+                }
+            }
+
             vscode.window.showInformationMessage('No new strings found to extract. Proceeding to translation sync...');
         }
 

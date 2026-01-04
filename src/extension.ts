@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { extractStrings } from './stringExtractor';
 import { updateArbFile, generateKey } from './arbManager';
+import { translateStrings } from './translator';
 
 export function activate(context: vscode.ExtensionContext) {
     console.log('Congratulations, your extension "flutter-auto-localizer" is now active!');
@@ -31,7 +32,7 @@ export function activate(context: vscode.ExtensionContext) {
             await updateArbFile(extractedStrings);
 
             // Sort in reverse order to avoid index drift
-            extractedStrings.sort((a, b) => b.index - a.index);
+            const stringsToReplace = [...extractedStrings].sort((a, b) => b.index - a.index);
 
             await editor.edit(editBuilder => {
                 // FIRST: If !hasImport, execute editBuilder.insert(new vscode.Position(0, 0), importStatement + '\n');
@@ -40,7 +41,7 @@ export function activate(context: vscode.ExtensionContext) {
                 }
 
                 // SECOND: Loop through the extracted strings (in reverse order) and perform the replacements.
-                for (const strObj of extractedStrings) {
+                for (const strObj of stringsToReplace) {
                     const startPos = document.positionAt(strObj.index);
                     const endPos = document.positionAt(strObj.index + strObj.text.length);
                     const range = new vscode.Range(startPos, endPos);
@@ -53,7 +54,11 @@ export function activate(context: vscode.ExtensionContext) {
                 }
             });
 
-            vscode.window.showInformationMessage(`Localized ${extractedStrings.length} strings successfully!`);
+            vscode.window.showInformationMessage(`Localized ${extractedStrings.length} strings successfully! Starting background translation...`);
+
+            // Start translation in background
+            translateStrings(extractedStrings);
+
         } else {
             vscode.window.showInformationMessage('No strings found to extract.');
         }

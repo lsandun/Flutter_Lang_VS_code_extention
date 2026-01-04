@@ -31,7 +31,7 @@ export function generateKey(text: string): string {
     return key;
 }
 
-export async function updateArbFile(strings: ExtractedString[]): Promise<void> {
+export async function updateArbFile(strings: ExtractedString[], locale: string = 'en', filename: string = 'app_en.arb'): Promise<void> {
     const workspaceFolders = vscode.workspace.workspaceFolders;
     if (!workspaceFolders) {
         vscode.window.showErrorMessage('No workspace open. Cannot find ARB file.');
@@ -40,14 +40,14 @@ export async function updateArbFile(strings: ExtractedString[]): Promise<void> {
 
     const rootPath = workspaceFolders[0].uri.fsPath;
     const l10nDir = path.join(rootPath, 'lib', 'l10n');
-    const arbFilePath = path.join(l10nDir, 'app_en.arb');
+    const arbFilePath = path.join(l10nDir, filename);
 
     // Ensure directory exists
     if (!fs.existsSync(l10nDir)) {
         fs.mkdirSync(l10nDir, { recursive: true });
     }
 
-    let arbContent: Record<string, string> = { "@@locale": "en" };
+    let arbContent: Record<string, string> = { "@@locale": locale };
 
     // Read existing file
     if (fs.existsSync(arbFilePath)) {
@@ -78,8 +78,8 @@ export async function updateArbFile(strings: ExtractedString[]): Promise<void> {
     fs.writeFileSync(arbFilePath, JSON.stringify(arbContent, null, 2), 'utf8');
 
     if (joinedCount > 0) {
-        vscode.window.showInformationMessage(`Added ${joinedCount} new keys to app_en.arb`);
+        vscode.window.showInformationMessage(`Added ${joinedCount} new keys to ${filename}`);
     } else {
-        vscode.window.showInformationMessage('No new keys added to app_en.arb');
+        vscode.window.showInformationMessage(`No new keys added to ${filename}`);
     }
 }

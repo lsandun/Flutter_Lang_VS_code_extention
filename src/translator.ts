@@ -4,20 +4,22 @@ import * as path from 'path';
 import { translate } from 'google-translate-api-x';
 import { ExtractedString } from './stringExtractor';
 
-const TARGET_LANGUAGES = [
-    { code: 'si', filename: 'app_si.arb' },
-    { code: 'ta', filename: 'app_ta.arb' }
-];
+// TARGET_LANGUAGES is now dynamic based on arguments
 
 function delay(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export async function translateStrings(strings: ExtractedString[]) {
+export async function translateStrings(strings: ExtractedString[], targetLocales: string[]) {
     // Note: We ignore the passed 'strings' argument and use app_en.arb as source of truth
     // to ensure we sync all missing keys, not just the newly extracted ones.
 
-    vscode.window.showInformationMessage('Syncing translations for Sinhala and Tamil in background...');
+    vscode.window.showInformationMessage(`Syncing translations for [${targetLocales.join(', ')}] in background...`);
+
+    const TARGET_LANGUAGES = targetLocales.map(code => ({
+        code: code,
+        filename: `app_${code}.arb`
+    }));
 
     const workspaceFolders = vscode.workspace.workspaceFolders;
     if (!workspaceFolders) {

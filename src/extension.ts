@@ -54,10 +54,34 @@ export function activate(context: vscode.ExtensionContext) {
                 }
             });
 
-            vscode.window.showInformationMessage(`Localized ${extractedStrings.length} strings successfully! Starting background translation...`);
+            const languages = [
+                { label: 'Sinhala', description: 'si' },
+                { label: 'Tamil', description: 'ta' },
+                { label: 'French', description: 'fr' },
+                { label: 'Spanish', description: 'es' },
+                { label: 'German', description: 'de' },
+                { label: 'Japanese', description: 'ja' },
+                { label: 'Italian', description: 'it' },
+                { label: 'Portuguese', description: 'pt' },
+                { label: 'Russian', description: 'ru' },
+                { label: 'Chinese (Simplified)', description: 'zh-cn' },
+                { label: 'Arabic', description: 'ar' },
+                { label: 'Hindi', description: 'hi' }
+            ];
 
-            // Start translation in background
-            translateStrings(extractedStrings);
+            const selectedLanguages = await vscode.window.showQuickPick(languages, {
+                canPickMany: true,
+                placeHolder: 'Select target languages for translation (optional)'
+            });
+
+            if (selectedLanguages && selectedLanguages.length > 0) {
+                const targetLocales = selectedLanguages.map(l => l.description!);
+                vscode.window.showInformationMessage(`Localized ${extractedStrings.length} strings successfully! Starting background translation...`);
+                // Start translation in background
+                translateStrings(extractedStrings, targetLocales);
+            } else {
+                vscode.window.showInformationMessage(`Localized ${extractedStrings.length} strings successfully! (No translation selected)`);
+            }
 
         } else {
             vscode.window.showInformationMessage('No strings found to extract.');

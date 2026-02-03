@@ -1,21 +1,74 @@
 {
   "name": "flutter-auto-localizer",
   "displayName": "Flutter Auto Localizer",
-  "description": "Automate extraction of hard-coded strings in Flutter projects.",
-  "version": "0.0.1",
+  "description": "Complete Flutter localization toolkit: Extract strings, generate translations, setup language switching - all automated!",
+  "version": "1.0.0",
   "publisher": "lakshan",
+  "icon": "images/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lsandun/flutter-auto-localizer"
+  },
   "engines": {
     "vscode": "^1.80.0"
   },
   "categories": [
+    "Programming Languages",
+    "Formatters",
     "Other"
+  ],
+  "keywords": [
+    "flutter",
+    "dart",
+    "localization",
+    "i18n",
+    "internationalization",
+    "translation",
+    "arb",
+    "l10n"
+  ],
+  "activationEvents": [
+    "onLanguage:dart"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
         "command": "flutterAutoLocalizer.start",
-        "title": "Flutter Auto Localizer: Start"
+        "title": "Flutter Auto Localizer: Extract & Translate (Current File)"
+      },
+      {
+        "command": "flutterAutoLocalizer.setup",
+        "title": "Flutter Auto Localizer: Generate Setup (Provider, Widgets, Config)"
+      },
+      {
+        "command": "flutterAutoLocalizer.batchProcess",
+        "title": "Flutter Auto Localizer: Batch Process All Files"
+      },
+      {
+        "command": "flutterAutoLocalizer.preview",
+        "title": "Flutter Auto Localizer: Preview Extractable Strings"
+      },
+      {
+        "command": "flutterAutoLocalizer.quickTranslate",
+        "title": "Flutter Auto Localizer: Quick Extract (No Translation)"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "flutterAutoLocalizer.start",
+          "when": "editorLangId == dart",
+          "group": "flutter_localizer"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "flutterAutoLocalizer.start",
+        "key": "ctrl+shift+l",
+        "mac": "cmd+shift+l",
+        "when": "editorLangId == dart"
       }
     ]
   },

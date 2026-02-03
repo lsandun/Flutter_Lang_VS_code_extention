@@ -1,51 +1,57 @@
 # Flutter Auto Localizer
 
-![Built for Flutter](https://img.shields.io/badge/Built%20for-Flutter-02569B?logo=flutter) ![Version](https://img.shields.io/badge/Version-1.0.0-blue) ![VS Code](https://img.shields.io/badge/VS%20Code-Extension-007ACC?logo=visualstudiocode)
+![Built for Flutter](https://img.shields.io/badge/Built%20for-Flutter-02569B?logo=flutter)
+![Version](https://img.shields.io/badge/Version-1.0.0-blue)
+![VS Code](https://img.shields.io/badge/VS%20Code-Extension-007ACC?logo=visualstudiocode)
+![Languages](https://img.shields.io/badge/Languages-100+-green)
 
-**Flutter Auto Localizer** is a complete localization toolkit for Flutter developers. It automates the entire i18n workflow: from extracting strings and generating translations to setting up language switching in your app.
+> **The complete Flutter localization toolkit that saves you hours of manual work!**
 
----
-
-## 🎯 What Makes This Special
-
-Unlike other localization tools that only extract strings, Flutter Auto Localizer provides a **complete end-to-end solution**:
-
-1. **Extract** → Automatically find and extract hard-coded strings
-2. **Translate** → Instant translations to 100+ languages via Google Translate
-3. **Connect** → Generate all the code needed to make language switching work in your app
+Flutter Auto Localizer automates the entire i18n workflow: extract strings, translate to 100+ languages, and generate language switcher widgets - all from within VS Code.
 
 ---
 
-## 🚀 Key Features
+## 🎬 Demo
 
-### 🔍 Automatic String Extraction
-- Intelligently scans Dart files to detect hard-coded string literals
-- Ignores imports, comments, and technical strings (URLs, file paths, etc.)
-- **NEW:** Supports strings with placeholders (`"Hello $name"` → `"Hello {name}"`)
+![Demo GIF](images/demo.gif)
 
-### 🛠️ Smart Code Transformation
-- Automatically removes `const` keywords from widgets with localized strings
-- Handles various widget types: `Text`, `Tooltip`, `InputDecoration`, etc.
-- Adds required imports automatically
+*Extract strings → Translate → Switch languages - all automated!*
 
-### 🌍 100+ Language Translations
-- Instant translations using Google Translate API
-- Deep sync: keeps all language files in perfect sync
-- Rate-limited to avoid API throttling
+---
 
-### ⚡ Complete Setup Generation (NEW!)
-- Generates `l10n.yaml` configuration
-- Updates `pubspec.yaml` with required dependencies
-- Creates `LocaleProvider` for state management
-- Generates ready-to-use **Language Switcher Widgets**:
-  - Dropdown widget
-  - ListTile for settings screens
-  - Bottom sheet selector
+## ✨ Key Features
 
-### 📦 Batch Processing (NEW!)
-- Process all Dart files in your project at once
-- Preview mode to see what will be extracted
-- Smart filtering: excludes generated files, tests, etc.
+| Feature | Description |
+|---------|-------------|
+| **🔍 Extract Strings** | Automatically find and extract hard-coded strings from Dart files |
+| **🌍 100+ Languages** | Instant translations via Google Translate API |
+| **📄 Page by Page** | Localize one page at a time with preview and error handling |
+| **📦 Batch Processing** | Process all Dart files in your project at once |
+| **⚙️ Setup Generator** | Generate LocaleProvider, Language Switcher widgets, and config files |
+| **📊 Status Report** | See localization progress across your project |
+| **🛠️ Smart const Removal** | Automatically handles `const` keyword removal |
+
+---
+
+## 🚀 Quick Start
+
+### Step 1: Extract Strings
+```
+Press Ctrl+Shift+L (Cmd+Shift+L on Mac)
+```
+Or right-click in a Dart file → **Flutter L10n: Extract Strings**
+
+### Step 2: Translate
+```
+Press Ctrl+Shift+T (Cmd+Shift+T on Mac)
+```
+Select target languages and watch the magic happen!
+
+### Step 3: Generate Setup
+Run **Flutter L10n: Generate Setup** to create:
+- `l10n.yaml` configuration
+- `LocaleProvider` for state management
+- Ready-to-use **Language Switcher widgets**
 
 ---
 
@@ -53,33 +59,30 @@ Unlike other localization tools that only extract strings, Flutter Auto Localize
 
 | Command | Shortcut | Description |
 |---------|----------|-------------|
-| **Extract & Translate** | `Ctrl+Shift+L` | Extract strings from current file and translate |
-| **Generate Setup** | - | Create provider, widgets, and config files |
-| **Batch Process** | - | Process all Dart files in the project |
-| **Preview Strings** | - | Preview what strings will be extracted |
-| **Quick Extract** | - | Extract strings without translation |
+| **Extract Strings** | `Ctrl+Shift+L` | Extract strings from current file |
+| **Translate** | `Ctrl+Shift+T` | Translate ARB to selected languages |
+| **Page by Page** | - | Localize one page at a time |
+| **Batch All Files** | - | Process entire project |
+| **Generate Setup** | - | Create provider, widgets, config |
+| **Show Status** | - | View localization progress |
+| **Preview** | - | Preview extractable strings |
 
-Access via Command Palette (`Ctrl+Shift+P` / `Cmd+Shift+P`) → Search "Flutter Auto Localizer"
+Access via: `Ctrl+Shift+P` → Type "Flutter L10n"
 
 ---
 
-## 🔧 Quick Start
+## 🔧 Setup Instructions
 
-### Step 1: Extract Strings
-1. Open a Dart file with hard-coded strings
-2. Press `Ctrl+Shift+L` (or run "Flutter Auto Localizer: Extract & Translate")
-3. Select target languages
-4. Done! Your code is now localized.
+### 1. Install Dependencies
+After running "Generate Setup", add these packages:
+```bash
+flutter pub add provider shared_preferences
+flutter pub get
+```
 
-### Step 2: Generate Setup (Connect Language Switching)
-1. Run "Flutter Auto Localizer: Generate Setup"
-2. Follow the instructions in the generated `LOCALIZATION_SETUP.md`
-3. Add the LocaleProvider to your app
-4. Use the Language Switcher widget in your settings
-
-### Step 3: Update Your main.dart
-
+### 2. Update main.dart
 ```dart
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'core/providers/locale_provider.dart';
@@ -99,6 +102,8 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Consumer<LocaleProvider>(
@@ -115,70 +120,44 @@ class MyApp extends StatelessWidget {
 }
 ```
 
+### 3. Add Language Switcher
+```dart
+// Option 1: Dropdown
+const LanguageSwitcher()
+
+// Option 2: ListTile for Settings
+const LanguageSwitcherTile()
+
+// Option 3: Bottom Sheet
+LanguageBottomSheet.show(context)
+```
+
 ---
 
-## 📁 Generated Files Structure
+## 📁 Project Structure After Setup
 
 ```
-your_flutter_project/
+your_project/
 ├── lib/
 │   ├── l10n/
 │   │   ├── app_en.arb          # English (source)
 │   │   ├── app_es.arb          # Spanish
-│   │   ├── app_fr.arb          # French
-│   │   └── ...
+│   │   ├── app_si.arb          # Sinhala
+│   │   └── ...                 # Other languages
 │   └── core/
 │       ├── providers/
 │       │   └── locale_provider.dart
 │       └── widgets/
 │           └── language_switcher.dart
 ├── l10n.yaml
-├── pubspec.yaml (updated)
-└── LOCALIZATION_SETUP.md
+└── LOCALIZATION_SETUP.md       # Detailed instructions
 ```
-
----
-
-## 🎨 Language Switcher Widgets
-
-The extension generates three ready-to-use widgets:
-
-### 1. Dropdown (for AppBar)
-```dart
-AppBar(
-  title: Text('Settings'),
-  actions: [
-    const LanguageSwitcher(),
-  ],
-)
-```
-
-### 2. ListTile (for Settings)
-```dart
-const LanguageSwitcherTile()
-```
-
-### 3. Bottom Sheet
-```dart
-ElevatedButton(
-  onPressed: () => LanguageBottomSheet.show(context),
-  child: Text('Change Language'),
-)
-```
-
----
-
-## ⚙️ Requirements
-
-- VS Code v1.80.0+
-- Flutter SDK installed
-- A Flutter project with `lib/` directory
 
 ---
 
 ## 🔄 Workflow Example
 
-**Before:**
+### Before:
 ```dart
 class HomeScreen extends StatelessWidget {
   @override
@@ -191,7 +170,7 @@ class HomeScreen extends StatelessWidget {
 }
 ```
 
-**After:**
+### After:
 ```dart
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -206,7 +185,8 @@ class HomeScreen extends StatelessWidget {
 }
 ```
 
-**Generated `app_en.arb`:**
+### Generated ARB Files:
+**app_en.arb:**
 ```json
 {
   "@@locale": "en",
@@ -215,19 +195,50 @@ class HomeScreen extends StatelessWidget {
 }
 ```
 
+**app_si.arb:**
+```json
+{
+  "@@locale": "si",
+  "welcome": "ආයුබෝවන්",
+  "helloWorld": "හෙලෝ වර්ල්ඩ්"
+}
+```
+
 ---
 
-## ⚠️ Notes
+## 🧪 Example App
 
-- **Translation API:** Uses `google-translate-api-x` (free). Good for development; consider professional translation review for production.
-- **Rate Limits:** The tool implements delays between API calls to avoid rate limiting.
-- **Placeholders:** Strings with `$variable` or `${expression}` are converted to ARB placeholder format.
+A complete example Flutter app is included in the `example_app/` directory with:
+- 4 screens (Home, Profile, Shop, Settings)
+- 100+ localizable strings
+- Ready to test the extension
+
+```bash
+cd example_app
+flutter pub get
+flutter run
+```
+
+---
+
+## ⚠️ Important Notes
+
+- **Translation API:** Uses `google-translate-api-x` (free). Good for development; consider professional review for production.
+- **Rate Limiting:** Built-in delays prevent API throttling.
+- **Placeholders:** Supports `$variable` and `${expression}` syntax.
+- **Source of Truth:** `app_en.arb` is always the master reference.
 
 ---
 
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit issues and pull requests.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ---
 
@@ -237,4 +248,14 @@ MIT License - Feel free to use in personal and commercial projects.
 
 ---
 
-**Enjoy automated localization!** 🚀🌍
+## 🙏 Acknowledgments
+
+- Built with TypeScript and VS Code Extension API
+- Translation powered by Google Translate
+- Inspired by the Flutter community's need for easier localization
+
+---
+
+**Made with ❤️ for Flutter Developers**
+
+*If this extension saves you time, consider giving it a ⭐ on GitHub!*

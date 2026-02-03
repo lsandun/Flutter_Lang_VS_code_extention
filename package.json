@@ -1,7 +1,7 @@
 {
   "name": "flutter-auto-localizer",
   "displayName": "Flutter Auto Localizer",
-  "description": "Complete Flutter localization toolkit: Extract strings, generate translations, setup language switching - all automated!",
+  "description": "Complete Flutter localization toolkit: Extract strings, translate to 100+ languages, generate language switcher - all automated!",
   "version": "1.0.0",
   "publisher": "lakshan",
   "icon": "images/icon.png",
@@ -25,7 +25,8 @@
     "internationalization",
     "translation",
     "arb",
-    "l10n"
+    "l10n",
+    "multilingual"
   ],
   "activationEvents": [
     "onLanguage:dart"
@@ -34,40 +35,73 @@
   "contributes": {
     "commands": [
       {
-        "command": "flutterAutoLocalizer.start",
-        "title": "Flutter Auto Localizer: Extract & Translate (Current File)"
+        "command": "flutterAutoLocalizer.extract",
+        "title": "Flutter L10n: Extract Strings",
+        "icon": "$(symbol-string)"
+      },
+      {
+        "command": "flutterAutoLocalizer.translate",
+        "title": "Flutter L10n: Translate",
+        "icon": "$(globe)"
+      },
+      {
+        "command": "flutterAutoLocalizer.pageByPage",
+        "title": "Flutter L10n: Page by Page",
+        "icon": "$(files)"
+      },
+      {
+        "command": "flutterAutoLocalizer.batch",
+        "title": "Flutter L10n: Batch All Files",
+        "icon": "$(folder)"
       },
       {
         "command": "flutterAutoLocalizer.setup",
-        "title": "Flutter Auto Localizer: Generate Setup (Provider, Widgets, Config)"
+        "title": "Flutter L10n: Generate Setup",
+        "icon": "$(gear)"
       },
       {
-        "command": "flutterAutoLocalizer.batchProcess",
-        "title": "Flutter Auto Localizer: Batch Process All Files"
+        "command": "flutterAutoLocalizer.status",
+        "title": "Flutter L10n: Show Status",
+        "icon": "$(info)"
       },
       {
         "command": "flutterAutoLocalizer.preview",
-        "title": "Flutter Auto Localizer: Preview Extractable Strings"
-      },
-      {
-        "command": "flutterAutoLocalizer.quickTranslate",
-        "title": "Flutter Auto Localizer: Quick Extract (No Translation)"
+        "title": "Flutter L10n: Preview",
+        "icon": "$(eye)"
       }
     ],
     "menus": {
       "editor/context": [
         {
-          "command": "flutterAutoLocalizer.start",
+          "command": "flutterAutoLocalizer.extract",
           "when": "editorLangId == dart",
-          "group": "flutter_localizer"
+          "group": "flutter_localizer@1"
+        },
+        {
+          "command": "flutterAutoLocalizer.pageByPage",
+          "when": "editorLangId == dart",
+          "group": "flutter_localizer@2"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "flutterAutoLocalizer.extract",
+          "when": "editorLangId == dart",
+          "group": "navigation"
         }
       ]
     },
     "keybindings": [
       {
-        "command": "flutterAutoLocalizer.start",
+        "command": "flutterAutoLocalizer.extract",
         "key": "ctrl+shift+l",
         "mac": "cmd+shift+l",
+        "when": "editorLangId == dart"
+      },
+      {
+        "command": "flutterAutoLocalizer.translate",
+        "key": "ctrl+shift+t",
+        "mac": "cmd+shift+t",
         "when": "editorLangId == dart"
       }
     ]

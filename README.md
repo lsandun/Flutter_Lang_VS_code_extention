@@ -33,6 +33,22 @@ Flutter Auto Localizer automates the entire i18n workflow: extract strings, tran
 
 ---
 
+## 🎨 Enhanced UI/UX
+
+### Smart Language Picker
+- ✅ **Already translated languages** appear at the **top** with checkmarks
+- 🔍 **Search** through 100+ languages instantly
+- 📋 **Pre-selects** existing translations for easy updates
+- ➕ **Add new languages** anytime - just select from the list
+
+### Real-time Progress Feedback
+- 📊 **Output Panel** shows detailed processing logs
+- 🔄 **Status Bar** displays current operation
+- 📝 **Summary Report** after each operation
+- ✅ Know exactly what files were created/modified
+
+---
+
 ## 🚀 Quick Start
 
 ### Step 1: Extract Strings

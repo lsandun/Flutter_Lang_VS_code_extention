@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+<<<<<<< HEAD
 /// ===========================================================
 /// FLUTTER AUTO LOCALIZER - TEST FILE
 /// 
@@ -7,6 +8,8 @@ import 'package:flutter/material.dart';
 /// Example: const Text('Notifications') → Text(AppLocalizations.of(context)!.notifications)
 /// ===========================================================
 
+=======
+>>>>>>> cfb0e08d76205e974d0ee0550368340ad92d6c0c
 class NotificationsScreen extends StatelessWidget {
   const NotificationsScreen({super.key});
 

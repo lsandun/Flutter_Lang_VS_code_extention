@@ -4,12 +4,15 @@ import 'notifications_screen.dart';
 import 'profile_screen.dart';
 import 'search_screen.dart';
 
+<<<<<<< HEAD
 /// ===========================================================
 /// FLUTTER AUTO LOCALIZER - TEST FILE
 /// 
 /// Format: BEFORE → AFTER (when extension is applied)
 /// ===========================================================
 
+=======
+>>>>>>> cfb0e08d76205e974d0ee0550368340ad92d6c0c
 class FeedScreen extends StatefulWidget {
   const FeedScreen({super.key});
 
@@ -24,15 +27,21 @@ class _FeedScreenState extends State<FeedScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+<<<<<<< HEAD
         // BEFORE: const Text('Social Connect')
         // AFTER:  Text(AppLocalizations.of(context)!.socialConnect)
+=======
+>>>>>>> cfb0e08d76205e974d0ee0550368340ad92d6c0c
         title: const Text('Social Connect'),
         actions: [
           IconButton(
             icon: const Icon(Icons.add_box_outlined),
             onPressed: () => _showCreatePostDialog(),
+<<<<<<< HEAD
             // BEFORE: tooltip: 'Create Post'
             // AFTER:  tooltip: AppLocalizations.of(context)!.createPost
+=======
+>>>>>>> cfb0e08d76205e974d0ee0550368340ad92d6c0c
             tooltip: 'Create Post',
           ),
           IconButton(

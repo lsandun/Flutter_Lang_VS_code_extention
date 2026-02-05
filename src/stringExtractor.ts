@@ -216,3 +216,92 @@ export function isUserFacingString(text: string): boolean {
 
     return !technicalPatterns.some(pattern => pattern.test(text));
 }
+
+/**
+ * Check if a string is in a field initializer or class member default
+ * These should NOT be localized because context is not available
+ * e.g., String _selectedLanguage = 'English';
+ */
+export function isFieldInitializer(code: string, stringIndex: number): boolean {
+    // Look at the code before the string to determine context
+    const lookbehindLength = 200;
+    const startOffset = Math.max(0, stringIndex - lookbehindLength);
+    const textBefore = code.substring(startOffset, stringIndex);
+
+    // Pattern 1: Variable declaration with type
+    // e.g., String _lang = 'English'
+    // e.g., final String language = 'English'
+    // e.g., static const String defaultLang = 'English'
+    const fieldDeclPattern = /(?:static\s+)?(?:final\s+|const\s+)?(?:String|var|dynamic)\s+\w+\s*=\s*$/i;
+
+    // Pattern 2: Late variable initialization
+    // e.g., late String _value = 'default'
+    const lateVarPattern = /late\s+(?:final\s+)?(?:String|var|dynamic)\s+\w+\s*=\s*$/i;
+
+    // Pattern 3: Class member with default value (not in a method)
+    // Check if we're NOT inside a function body by looking for unmatched { before )
+    const classFieldPattern = /(?:^|\n)\s*(?:static\s+)?(?:final\s+|const\s+)?(?:String|var|dynamic)\s+\w+\s*=\s*$/;
+
+    // Pattern 4: Map/List literal with string keys (technical)
+    // e.g., {'key': value}
+    const mapKeyPattern = /[\[{]\s*$/;
+    const mapKeyAfterPattern = /^\s*['"]\w+['"]\s*:/;
+
+    // Check if string is a map key
+    const textAfter = code.substring(stringIndex).substring(0, 50);
+    if (mapKeyPattern.test(textBefore) || /^['"]\w+['"]\s*:/.test(code.substring(stringIndex))) {
+        // This is a map key, not a user-facing string
+        return true;
+    }
+
+    // Check for field declaration patterns
+    if (fieldDeclPattern.test(textBefore) ||
+        lateVarPattern.test(textBefore) ||
+        classFieldPattern.test(textBefore)) {
+        return true;
+    }
+
+    // Pattern 5: Check if we're inside a class body but outside a method
+    // Count braces to determine nesting level
+    const fullTextBefore = code.substring(0, stringIndex);
+
+    // Find the last class declaration
+    const lastClassMatch = fullTextBefore.match(/class\s+\w+[^{]*\{/g);
+    if (lastClassMatch) {
+        // Get position after last class declaration
+        const lastClassDecl = lastClassMatch[lastClassMatch.length - 1];
+        const classStartIndex = fullTextBefore.lastIndexOf(lastClassDecl);
+        const afterClass = fullTextBefore.substring(classStartIndex + lastClassDecl.length);
+
+        // Count method/function entries
+        const methodMatches = afterClass.match(/\w+\s*\([^)]*\)\s*(?:async\s*)?\{/g) || [];
+
+        // Count opening and closing braces after methods
+        let braceCount = 0;
+        let inMethod = false;
+        for (const methodMatch of methodMatches) {
+            const methodIndex = afterClass.indexOf(methodMatch);
+            const beforeMethod = afterClass.substring(0, methodIndex);
+            const afterMethod = afterClass.substring(methodIndex);
+
+            // Check brace balance
+            braceCount = (afterMethod.match(/\{/g) || []).length -
+                (afterMethod.match(/\}/g) || []).length;
+            if (braceCount > 0) {
+                inMethod = true;
+                break;
+            }
+        }
+
+        // If not in a method, it's likely a field initializer
+        if (!inMethod && methodMatches.length === 0) {
+            // Check if this looks like a field declaration
+            const lastLine = textBefore.split('\n').pop() || '';
+            if (/^\s*(?:static\s+)?(?:final\s+|const\s+)?\w+\s+\w+\s*=\s*$/.test(lastLine)) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}

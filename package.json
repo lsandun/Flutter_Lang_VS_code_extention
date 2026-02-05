@@ -68,6 +68,31 @@
         "command": "flutterAutoLocalizer.preview",
         "title": "Flutter L10n: Preview",
         "icon": "$(eye)"
+      },
+      {
+        "command": "flutterAutoLocalizer.autoLocalize",
+        "title": "Flutter L10n: Auto Localize",
+        "icon": "$(rocket)"
+      },
+      {
+        "command": "flutterAutoLocalizer.addLanguage",
+        "title": "Flutter L10n: Add Language",
+        "icon": "$(add)"
+      },
+      {
+        "command": "flutterAutoLocalizer.extractOnly",
+        "title": "Flutter L10n: Extract Strings Only",
+        "icon": "$(symbol-string)"
+      },
+      {
+        "command": "flutterAutoLocalizer.syncTranslations",
+        "title": "Flutter L10n: Sync Translations",
+        "icon": "$(sync)"
+      },
+      {
+        "command": "flutterAutoLocalizer.validateLanguages",
+        "title": "Flutter L10n: Validate Languages",
+        "icon": "$(check)"
       }
     ],
     "menus": {
